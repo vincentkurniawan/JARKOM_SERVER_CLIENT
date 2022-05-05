@@ -33,8 +33,8 @@ ANSWER_D = 4
 class Main():
     #constructor
     def __init__(self):
-        self.setupGUI()
         self.setupClient()
+        self.setupGUI()
 
     #setup the client connection with the server
     def setupClient(self):
@@ -47,7 +47,7 @@ class Main():
         self.client.connect((server_host, server_port))
         self.client.send("init".encode('utf-8'))
         print("Hello! you are now connected to the server..")
-        self.question_answer_recv()
+        
 
     #setup the gui window
     def setupGUI(self):
@@ -62,6 +62,8 @@ class Main():
         #empty frame filling
         self.title, self.question, self.answer_a, self.answer_b, self.answer_c, self.answer_d, self.score_state, self.score = self.create_display_labels()
         # self.total_label, self.expression_input, self.get_text_button = self.create_display_labels()
+
+        self.question_answer_recv()
 
 
     #create top part frame for displaying the typed math opr & button
@@ -146,12 +148,14 @@ class Main():
 
     def question_answer_recv (self):
         while True:
-            data = self.client.recv(1024)
-            data = data.decode('utf-8')
+            data0 = self.client.recv(1024)
+            data0 = data0.decode('utf-8')
+            data = list(data0.split("_"))
             self.handler_question_score(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
 
     def handler_answer_send (self, answer):
-        self.client.send(answer.encode('utf-8'))
+        msg = str(answer)
+        self.client.send(msg.encode('utf-8'))
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):
         # update GUI text

@@ -39,6 +39,8 @@ class ClientThread(threading.Thread) :
         i = 0
         client_score = 0
         while True :
+
+            print(i)
             
             #terima message (mathematical operations) from client
             data = self.csocket.recv(2048)
@@ -59,7 +61,8 @@ class ClientThread(threading.Thread) :
                     score_state = SCORE_STATE_FALSE
                 question_score = [i+2, rounds[i+1].question, rounds[i+1].a, rounds[i+1].b, rounds[i+1].c, rounds[i+1].d, client_score, score_state]
             
-            self.csocket.send(question_score.encode('utf-8'))
+            str_question_score = "_".join(str(x) for x in question_score)
+            self.csocket.send(str_question_score.encode('utf-8'))
             i += 1
             
         print("Client at ", self.caddress, " disconnected...")
