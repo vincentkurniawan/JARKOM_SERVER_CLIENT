@@ -9,6 +9,7 @@
 import socket
 import tkinter as tk
 from tkinter import ANCHOR, CENTER, font
+from functools import partial
 
 #GUI font size collection
 LARGE_FONT_STYLE = ("Helvetica", 15, "bold")
@@ -63,7 +64,7 @@ class Main():
         self.title, self.question, self.answer_a, self.answer_b, self.answer_c, self.answer_d, self.score_state, self.score = self.create_display_labels()
         # self.total_label, self.expression_input, self.get_text_button = self.create_display_labels()
 
-        self.question_answer_recv()
+        
 
 
     #create top part frame for displaying the typed math opr & button
@@ -95,19 +96,19 @@ class Main():
         question.pack(expand=False, fill=None)
 
         # the answer A
-        answer_a = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_A))
+        answer_a = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_A))
         answer_a.grid(row=1, column=0, padx=215, pady=0)
 
         # the answer B
-        answer_b = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_B))
+        answer_b = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_B))
         answer_b.grid(row=1, column=1, padx=215, pady=0)
 
         # the answer C
-        answer_c = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_C))
+        answer_c = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_C))
         answer_c.grid(row=2, column=0, padx=215, pady=0)
 
         # the answer D
-        answer_d = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_D))
+        answer_d = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_D))
         answer_d.grid(row=2, column=1, padx=215, pady=0)
 
         # score state
@@ -151,6 +152,7 @@ class Main():
             data0 = self.client.recv(1024)
             data0 = data0.decode('utf-8')
             data = list(data0.split("_"))
+            print (data)
             self.handler_question_score(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
 
     def handler_answer_send (self, answer):
@@ -218,11 +220,10 @@ class Main():
     #reset the input box
     def clearInput(self):
         self.expression_input.delete('1.0', 'end-1c')
-
-
     #start the GUI window 
     def run(self):
         self.window.mainloop()
+        self.question_answer_recv()
 
 
 #run these code below once the py launched
