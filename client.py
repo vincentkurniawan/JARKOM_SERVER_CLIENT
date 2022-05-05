@@ -35,8 +35,6 @@ class Main():
     def __init__(self):
         self.setupGUI()
         self.setupClient()
-        self.current_answer = 0
-
 
     #setup the client connection with the server
     def setupClient(self):
@@ -47,8 +45,9 @@ class Main():
 
         #connect to server on local computer
         self.client.connect((server_host, server_port))
-        print("Hello! you are now connected to the server..") 
-
+        self.client.send("init".encode('utf-8'))
+        print("Hello! you are now connected to the server..")
+        self.question_answer_recv()
 
     #setup the gui window
     def setupGUI(self):
@@ -94,27 +93,27 @@ class Main():
         question.pack(expand=False, fill=None)
 
         # the answer A
-        answer_a = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer(ANSWER_A))
+        answer_a = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_A))
         answer_a.grid(row=1, column=0, padx=215, pady=0)
 
         # the answer B
-        answer_b = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer(ANSWER_B))
+        answer_b = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_B))
         answer_b.grid(row=1, column=1, padx=215, pady=0)
 
         # the answer C
-        answer_c = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer(ANSWER_C))
+        answer_c = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_C))
         answer_c.grid(row=2, column=0, padx=215, pady=0)
 
         # the answer D
-        answer_d = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer(ANSWER_D))
+        answer_d = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=self.handler_answer_send(ANSWER_D))
         answer_d.grid(row=2, column=1, padx=215, pady=0)
 
         # score state
-        score_state = tk.Label(self.display_frame, anchor=CENTER, text="Your answer is ???", font=LARGE_FONT_STYLE, bg=DARK_GRAY, fg=LIGHT_GRAY)
+        score_state = tk.Label(self.result_frame, anchor=CENTER, text="Your answer is ???", font=LARGE_FONT_STYLE, bg=DARK_GRAY, fg=LIGHT_GRAY)
         score_state.pack(expand=False, fill=None)
 
         # current score
-        score = tk.Label(self.display_frame, anchor=CENTER, text="CURRENT SCORE = ", font=LARGE_FONT_STYLE, bg=DARK_GRAY, fg=LIGHT_GRAY)
+        score = tk.Label(self.result_frame, anchor=CENTER, text="CURRENT SCORE = ", font=LARGE_FONT_STYLE, bg=DARK_GRAY, fg=LIGHT_GRAY)
         score.pack(expand=False, fill=None)
 
         return title, question, answer_a, answer_b, answer_c, answer_d, score_state, score
@@ -145,13 +144,13 @@ class Main():
 
         # return total_label, expression_input, get_text_button
 
-    def question_answer_send_recv (self):
+    def question_answer_recv (self):
         while True:
             data = self.client.recv(1024)
             data = data.decode('utf-8')
             self.handler_question_score(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
 
-    def handler_answer (self, answer):
+    def handler_answer_send (self, answer):
         self.client.send(answer.encode('utf-8'))
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):

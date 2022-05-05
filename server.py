@@ -4,6 +4,27 @@
 import socket, threading
 from _thread import *
 
+# score state collection
+SCORE_STATE_TRUE = 1
+SCORE_STATE_FALSE = 2
+SCORE_STATE_NOTSET = 3
+
+class Round():
+    #constructor
+    def __init__(self, question, key, a, b, c, d):
+        self.question = question
+        self.key = key
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+rounds = [Round("Siapa penemu gravitasi ?", 2, "Albert Einstein", "Isaac Newton", "Duncan Lord", "Kingsman"), 
+            Round("Apa nama makanan khas Italia ?", 1, "Pizza", "Burger", "Kentang goreng", "Sushi"),
+            Round("question 3 ?", 2, "Albert Einstein", "Isaac Newton", "Duncan Lord", "Kingsman"),
+            Round("question 4?", 2, "Albert Einstein", "Isaac Newton", "Duncan Lord", "Kingsman")
+            ]
+
 class ClientThread(threading.Thread) :
     #constructor
     def __init__(self, clientAddress, clientSocket) :
@@ -15,29 +36,45 @@ class ClientThread(threading.Thread) :
     #thread.start() akan menjalankan ini
     def run(self) :
         print("Connection from: ", self.caddress)
+        i = 0
+        client_score = 0
         while True :
+            
             #terima message (mathematical operations) from client
             data = self.csocket.recv(2048)
             msg = data.decode('utf-8')
 
-            #stopper connections 
-            if msg == 'done':
-                break
+            if msg == 'init':
+                question_score = [i+1, rounds[i].question, rounds[i].a, rounds[i].b, rounds[i].c, rounds[i].d, client_score, SCORE_STATE_NOTSET]
                 
-            #do the mathematical operations
-            res = str(self.count(msg))
+            #stopper connections 
+            elif msg == 'done':
+                break
 
-            #sends back mathematical operations result to client
-            self.csocket.send(res.encode('utf-8'))
+            else:
+                # evaluate client question answer
+                if (self.evaluate_client_answer(i, msg)):
+                    score_state = SCORE_STATE_TRUE
+                else:
+                    score_state = SCORE_STATE_FALSE
+                question_score = [i+2, rounds[i+1].question, rounds[i+1].a, rounds[i+1].b, rounds[i+1].c, rounds[i+1].d, client_score, score_state]
+            
+            self.csocket.send(question_score.encode('utf-8'))
+            i += 1
             
         print("Client at ", self.caddress, " disconnected...")
 
-    #method to do mathematical operations
-    def count(self, msg) :
-        try :
-            return eval(msg)
-        except SyntaxError :
-            return 'Invalid syntax, please try again.. :('
+    def evaluate_client_answer (self, question_number, msg):
+        if (rounds[question_number].key == msg):
+            return True
+        return False
+
+    # #method to do mathematical operations
+    # def count(self, msg) :
+    #     try :
+    #         return eval(msg)
+    #     except SyntaxError :
+    #         return 'Invalid syntax, please try again.. :('
 
 
 def main():
