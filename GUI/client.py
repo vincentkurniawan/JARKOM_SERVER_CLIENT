@@ -11,7 +11,7 @@ import socket
 import threading
 import time
 import tkinter as tk
-from tkinter import font
+from tkinter import WORD, font
 from tkinter.font import BOLD, families
 
 # score state collection
@@ -67,31 +67,31 @@ class Main():
 
 
     def create_display_labels(self):
-        self.title = tk.Label(self.frame_title, text='', font = ('Courier New', 18))
+        self.title = tk.Label(self.frame_title, text='', font = ('Courier New', 18), wraplength=600)
         self.title.pack()
 
-        self.question = tk.Label(self.frame_title, text='', font = ('Courier New', 18))
+        self.question = tk.Label(self.frame_title, text='', font = ('Courier New', 18), wraplength=600)
         self.question.pack()
 
-        self.answer_a = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_A))
+        self.answer_a = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_A), wraplength=600)
         self.answer_a.pack()
 
-        self.answer_b = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_B))
+        self.answer_b = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_B), wraplength=600)
         self.answer_b.pack()
 
-        self.answer_c = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_C))
+        self.answer_c = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_C), wraplength=600)
         self.answer_c.pack()
 
-        self.answer_d = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_D))
+        self.answer_d = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_D), wraplength=600)
         self.answer_d.pack()
 
-        self.score_state = tk.Label(self.frame_result, text='', font = ('Courier New', 18))
+        self.score_state = tk.Label(self.frame_result, text='', font = ('Courier New', 18), wraplength=600)
         self.score_state.pack()
 
-        self.score = tk.Label(self.frame_result, text='', font = ('Courier New', 18))
+        self.score = tk.Label(self.frame_result, text='', font = ('Courier New', 18), wraplength=600)
         self.score.pack()
 
-        self.status = tk.Label(self.frame_result, text='', font = ('Courier New', 18))
+        self.status = tk.Label(self.frame_result, text='', font = ('Courier New', 18), wraplength=600)
         self.status.pack()
 
 
@@ -105,7 +105,6 @@ class Main():
         data0 = self.client.recv(1024)
         data0 = data0.decode('utf-8')
         data = list(data0.split("_"))
-        print (data)
         if (len(data) > 2):
             self.handler_question_score(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
         else:
@@ -118,7 +117,7 @@ class Main():
             else:
                 self.title['text'] = 'TIED GAME!'
             
-            self.question['text'] = 'your score : ' + str(client_score) + ' . other player score : ' + str(server_score)
+            self.question['text'] = 'your score : ' + str(client_score) + '\nother player score : ' + str(server_score)
             
             self.answer_a['text'] = ''
             self.answer_b['text'] = ''
@@ -131,7 +130,9 @@ class Main():
                 self.status['text'] = 'The game will shutdown in ' + str(i) + ' seconds ...'
                 self.window.update()
                 time.sleep(1)
+            self.window.destroy()
             self.client.close()
+            exit()
 
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):
@@ -146,10 +147,10 @@ class Main():
         self.answer_d['text'] = ''
 
         if (int(state_score) == SCORE_STATE_TRUE):
-            self.score_state.config(text='Your Answer is Correct !')
+            self.score_state.config(text='Your Answer is Correct!')
             self.score['text'] = 'SCORE : ' + current_score
         elif (int(state_score) == SCORE_STATE_FALSE):
-            self.score_state.config(text='Your Answer is Wrong !')
+            self.score_state.config(text='Your Answer is Wrong!')
             self.score['text'] = 'SCORE : ' + current_score
 
         for j in range (5, 0, -1):

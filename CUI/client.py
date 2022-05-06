@@ -53,6 +53,7 @@ class Main():
                 time.sleep(1)
             print ("<==========================================>")
             self.client.close()
+            exit()
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):
         question_number = int(question_number) + 1
