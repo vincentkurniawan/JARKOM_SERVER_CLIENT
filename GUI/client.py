@@ -48,13 +48,13 @@ class Main():
     #setup the gui window
     def setupGUI(self):
         self.window = tk.Tk()
+        self.window.title('KAHUUT !! (CLIENT)')
 
         #create the empty frame 
         self.create_display_frame()
         self.create_display_labels()
 
 
-    #create top part frame for displaying the typed math opr & button
     def create_display_frame(self):
         self.frame_title = tk.Frame(self.window, relief='sunken')
         self.frame_title.pack(fill='both', expand=True, padx=10, pady=10)
@@ -65,7 +65,7 @@ class Main():
         self.frame_result = tk.Frame(self.window, relief='sunken')
         self.frame_result.pack(fill='both', expand=True, padx=10, pady=10)
 
-    #assigning text to the text-view in display frame
+
     def create_display_labels(self):
         self.title = tk.Label(self.frame_title, text='', font = ('Courier New', 18))
         self.title.pack()
