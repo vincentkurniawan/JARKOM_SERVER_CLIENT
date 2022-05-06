@@ -113,6 +113,8 @@ class ClientThread(threading.Thread) :
             time.sleep(1)
         print ("<==========================================>")
         print("Client at ", self.caddress, " disconnected...")
+        self.csocket.close()
+        exit()
 
 
     def server_wait_time (self):

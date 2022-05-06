@@ -77,31 +77,31 @@ class ClientThread(threading.Thread) :
 
 
     def create_display_labels(self):
-        self.title = tk.Label(self.frame_title, text='', font = ('Courier New', 18))
+        self.title = tk.Label(self.frame_title, text='', font = ('Courier New', 18), wraplength=600)
         self.title.pack()
 
-        self.question = tk.Label(self.frame_title, text='', font = ('Courier New', 18))
+        self.question = tk.Label(self.frame_title, text='', font = ('Courier New', 18), wraplength=600)
         self.question.pack()
 
-        self.answer_a = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_A))
+        self.answer_a = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_A), wraplength=600)
         self.answer_a.pack()
 
-        self.answer_b = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_B))
+        self.answer_b = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_B), wraplength=600)
         self.answer_b.pack()
 
-        self.answer_c = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_C))
+        self.answer_c = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_C), wraplength=600)
         self.answer_c.pack()
 
-        self.answer_d = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_D))
+        self.answer_d = tk.Button(self.frame_button, text='', font = ('Courier New', 18), bg='#9FB4FF', command=partial(self.handler_answer_send, ANSWER_D), wraplength=600)
         self.answer_d.pack()
 
-        self.score_state = tk.Label(self.frame_result, text='', font = ('Courier New', 18))
+        self.score_state = tk.Label(self.frame_result, text='', font = ('Courier New', 18), wraplength=600)
         self.score_state.pack()
 
-        self.score = tk.Label(self.frame_result, text='', font = ('Courier New', 18))
+        self.score = tk.Label(self.frame_result, text='', font = ('Courier New', 18), wraplength=600)
         self.score.pack()
 
-        self.status = tk.Label(self.frame_result, text='', font = ('Courier New', 18))
+        self.status = tk.Label(self.frame_result, text='', font = ('Courier New', 18), wraplength=600)
         self.status.pack()
 
     def handler_answer_send(self, answer):
@@ -168,14 +168,14 @@ class ClientThread(threading.Thread) :
         str_final_score = "_".join(str(x) for x in final_score)
         self.csocket.send(str_final_score.encode('utf-8'))
 
-        if (self.client_score > self.server_score):
+        if (self.client_score < self.server_score):
             self.title['text'] = 'CONGRATS YOU WIN!'
-        elif (self.client_score < self.server_score):
+        elif (self.client_score > self.server_score):
             self.title['text'] = 'YOU LOSE!'
         else:
             self.title['text'] = 'TIED GAME!'
 
-        self.question['text'] = 'your score : ' + str(self.server_score) + ' . other player score : ' + str(self.client_score)
+        self.question['text'] = 'your score : ' + str(self.server_score) + '\nother player score : ' + str(self.client_score)
 
         self.answer_a['text'] = ''
         self.answer_b['text'] = ''
@@ -188,6 +188,9 @@ class ClientThread(threading.Thread) :
             self.status['text'] = 'The game will shutdown in ' + str(i) + ' seconds ...'
             self.window.update()
             time.sleep(1)
+        self.window.destroy()
+        self.csocket.close()
+        exit()
 
     def server_wait_time (self, question_number):
         check = True
@@ -202,8 +205,6 @@ class ClientThread(threading.Thread) :
         # kalau ga jawab dalam 10 detik:
         if (check):
             self.answer = -100
-
-        print (question_number, self.answer)
 
         if (self.evaluate_answer(question_number, int(self.answer))):
                 self.server_score += 100
