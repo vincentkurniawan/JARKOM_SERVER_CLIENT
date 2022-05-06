@@ -101,7 +101,7 @@ class ClientThread(threading.Thread) :
     def handler_answer_send(self, answer):
         self.answer = str(answer)
         self.server_wait = False
-        self.status['text'] = 'Waiting for other player ...'
+        
 
     #thread.start() akan menjalankan ini
     def run(self) :
@@ -109,7 +109,6 @@ class ClientThread(threading.Thread) :
         i = 0
         total_question_number = len(rounds)
         for i in range (0, total_question_number+1) :
-            
             #terima message (mathematical operations) from client
             data = self.csocket.recv(2048)
             msg = data.decode('utf-8')
@@ -132,6 +131,13 @@ class ClientThread(threading.Thread) :
                 question_score = [i, rounds[i].question, rounds[i].a, rounds[i].b, rounds[i].c, rounds[i].d, self.client_score, score_state]
                 str_question_score = "_".join(str(x) for x in question_score)
                 self.csocket.send(str_question_score.encode('utf-8'))
+                
+                self.question['text'] = ''
+                self.title['text'] = ''
+                self.answer_a['text'] = ''
+                self.answer_b['text'] = ''
+                self.answer_c['text'] = ''
+                self.answer_d['text'] = ''
 
                 for j in range (5, 0, -1):
                     self.status.config(text='Please wait '+ str(j)+ ' seconds for next question ...')
@@ -142,8 +148,14 @@ class ClientThread(threading.Thread) :
                 self.handler_question_score(i, rounds[i].question, rounds[i].a, rounds[i].b, rounds[i].c, rounds[i].d, self.server_score)
                 
                 self.server_wait = True
+                self.check_global = False
 
                 threading.Thread(target=self.server_wait_time, args=(i,)).start()
+
+                for j in range (10, 0, -1):
+                    if (self.check_global):
+                        break
+                    time.sleep(1)
         
         # end game to client
         final_score = [self.server_score, self.client_score]
@@ -180,17 +192,21 @@ class ClientThread(threading.Thread) :
                 break
             self.window.update()
             time.sleep(1)
+        self.status['text'] = 'Waiting for other player ...'
         # kalau ga jawab dalam 10 detik:
         if (check):
             self.answer = -100
 
-        if (self.evaluate_answer(question_number, self.answer)):
+        print (question_number, self.answer)
+
+        if (self.evaluate_answer(question_number, int(self.answer))):
                 self.server_score += 100
                 self.score_state['text'] = 'Your Answer is Correct!'
                 self.score['text'] = 'SCORE : ' + str(self.server_score)
         else:
                 self.score_state['text'] = 'Your Answer is Wrong!'
                 self.score['text'] = 'SCORE : ' + str(self.server_score)
+        self.check_global = True
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score):
         self.title['text'] = 'Question ' + str(question_number + 1)
