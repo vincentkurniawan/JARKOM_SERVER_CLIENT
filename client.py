@@ -224,6 +224,7 @@ class Main():
     def run(self):
         self.window.mainloop()
         self.question_answer_recv()
+        
 
 
 #run these code below once the py launched
