@@ -45,6 +45,7 @@ class Main():
     def setupGUI(self):
         self.window = tk.Tk()
         self.window.title('KAHUUT !! (CLIENT)')
+        self.window.geometry("700x700")
 
         #create the empty frame 
         self.create_display_frame()
@@ -128,7 +129,6 @@ class Main():
                 self.window.update()
                 time.sleep(1)
             self.window.destroy()
-            self.client.close()
             exit()
 
 

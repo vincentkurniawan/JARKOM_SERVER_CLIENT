@@ -63,6 +63,7 @@ class ClientThread(threading.Thread) :
     def setupGUI (self):
         self.window = window
         self.window.title('KAHUUT !! (SERVER)')
+        self.window.geometry("700x700")
 
         #create the empty frame 
         self.create_display_frame()
@@ -194,7 +195,6 @@ class ClientThread(threading.Thread) :
             self.window.update()
             time.sleep(1)
         self.window.destroy()
-        self.csocket.close()
         exit()
 
 

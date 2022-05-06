@@ -119,6 +119,7 @@ class ClientThread(threading.Thread) :
             time.sleep(1)
         print ("<==========================================>")
         print("Client at ", self.caddress, " disconnected...")
+        exit()
 
 
     def server_wait_time (self):
