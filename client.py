@@ -34,8 +34,8 @@ ANSWER_D = 4
 class Main():
     #constructor
     def __init__(self):
-        self.setupClient()
         self.setupGUI()
+        self.setupClient()
 
     #setup the client connection with the server
     def setupClient(self):
@@ -46,8 +46,11 @@ class Main():
 
         #connect to server on local computer
         self.client.connect((server_host, server_port))
-        self.client.send("init".encode('utf-8'))
         print("Hello! you are now connected to the server..")
+        
+        #begin QnA rounds
+        self.client.send("init".encode('utf-8'))
+        self.question_answer_recv()
         
 
     #setup the gui window
@@ -148,21 +151,21 @@ class Main():
         # return total_label, expression_input, get_text_button
 
     def question_answer_recv (self):
-        while True:
-            data0 = self.client.recv(1024)
-            data0 = data0.decode('utf-8')
-            data = list(data0.split("_"))
-            print (data)
-            self.handler_question_score(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+        data0 = self.client.recv(1024)
+        data0 = data0.decode('utf-8')
+        data = list(data0.split("_"))
+        print("tester : ",data[0])
+        self.handler_question_score(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
 
     def handler_answer_send (self, answer):
         msg = str(answer)
+        print("client's answer", msg)
         self.client.send(msg.encode('utf-8'))
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):
-        # update GUI text
+        # below are the codes to update GUI text view
 
-        # set question
+        # set question 
         self.title.config(text = self.title.cget("text") + question_number)
         self.question.config(text = question)
         self.answer_a.config(text = answer_a)
@@ -223,7 +226,6 @@ class Main():
     #start the GUI window 
     def run(self):
         self.window.mainloop()
-        self.question_answer_recv()
 
 
 #run these code below once the py launched
