@@ -1,5 +1,6 @@
+# Kelompok :
 # Nadia Clarissa Hermawan / 6181901013
-# we definitely dont need any GUI on the server side :)
+# Vincent Kurniawan / 6181901024
 
 from functools import partial
 import socket, threading
@@ -42,6 +43,7 @@ rounds = [Round("Nama lapisan protokol internet yang berfungsi untuk mengatur ro
             Round("Apa nama translator pada router yang bertugas mentranslasikan IP address lokal dari setiap device yang tekonek ke suatu WiFi agar dapat dikenali ISP ?", 4, "TAN", "ATN", "NAD", "NAT")
         ]
 
+
 class ClientThread(threading.Thread) :
     #constructor
     def __init__(self, clientAddress, clientSocket) :
@@ -57,6 +59,7 @@ class ClientThread(threading.Thread) :
         print("New connection added: ", self.caddress)
         self.setupGUI()
 
+
     def setupGUI (self):
         self.window = window
         self.window.title('KAHUUT !! (SERVER)')
@@ -64,6 +67,7 @@ class ClientThread(threading.Thread) :
         #create the empty frame 
         self.create_display_frame()
         self.create_display_labels()
+
 
     def create_display_frame(self):
         self.frame_title = tk.Frame(self.window, relief='sunken')
@@ -103,6 +107,7 @@ class ClientThread(threading.Thread) :
 
         self.status = tk.Label(self.frame_result, text='', font = ('Courier New', 18), wraplength=600)
         self.status.pack()
+
 
     def handler_answer_send(self, answer):
         self.answer = str(answer)
@@ -192,6 +197,7 @@ class ClientThread(threading.Thread) :
         self.csocket.close()
         exit()
 
+
     def server_wait_time (self, question_number):
         check = True
         for i in range (10, 0, -1):
@@ -215,6 +221,7 @@ class ClientThread(threading.Thread) :
                 self.score['text'] = 'SCORE : ' + str(self.server_score)
         self.check_global = True
 
+
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score):
         self.title['text'] = 'Question ' + str(question_number + 1)
         self.question['text'] = question
@@ -225,6 +232,7 @@ class ClientThread(threading.Thread) :
 
         self.score_state['text'] = ''
         self.score['text'] = ''
+
 
     def evaluate_answer(self, question_number, answer):
         if (rounds[question_number].key == answer):

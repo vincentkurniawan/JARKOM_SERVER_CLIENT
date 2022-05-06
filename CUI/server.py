@@ -1,5 +1,6 @@
+# Kelompok :
 # Nadia Clarissa Hermawan / 6181901013
-# we definitely dont need any GUI on the server side :)
+# Vincent Kurniawan / 6181901024
 
 import socket, threading
 import time
@@ -21,13 +22,17 @@ class Round():
         self.d = d
 
 
-
-rounds = [Round("Siapa penemu gravitasi ?", 2, "Albert Einstein", "Isaac Newton", "Duncan Lord", "Kingsman"), 
-            Round("Apa nama makanan khas Italia ?", 1, "Pizza", "Burger", "Kentang goreng", "Sushi"),
-            Round("question 3 ?", 2, "Albert Einstein", "Isaac Newton", "Duncan Lord", "Kingsman"),
-            Round("question 4?", 2, "Albert Einstein", "Isaac Newton", "Duncan Lord", "Kingsman")
-            ]
-
+rounds = [Round("Nama lapisan protokol internet yang berfungsi untuk mengatur routing datagram dan informasi IP dari source ke destination ?", 3, "Link Layer", "Transport Layer", "Network Layer", "Application Layer"), 
+            Round("Nama lapisan protokol internet yang berfungsi untuk membuat paket agar dapat di transfer dari satu device ke device lain serta melibatkan hardware ?", 1, "Link Layer", "Transport Layer", "Network Layer", "Application Layer"),
+            Round("Disebut apakah fungsi dari network layer dalam menyalurkan paket dari port input router ke port output router ?", 4, "Decapsulation", "Encapsulation", "Routing", "Forwarding"),
+            Round("Kapan fragmentasi dilakukan ?", 3, "Ketika ukuran MTU sebelumnya > dari MTU selanjutnya", "Ketika ukuran paket datagram > ukuran MTU", "A & B", "Tidak ada yang benar"),
+            Round("Akan dikirimkan paket sebesar 8000 byte dari komputer A ke komputer B. MTU A = 10kB, MTU B = 576 byte. Berapakah fragment yang terbentuk ?", 2, "0", "15", "16", "20"),
+            Round("Apa command yang digunakan untuk mengecek IP Address ?", 1, "ipconfig", "ipaddress", "netstat", "ping website.com"),
+            Round("Network address : 192.168.1.0/24. Manakah network id nya ?", 2, ".0", "192.168.1", "192.168", "192"),
+            Round("Network address : 192.168.1.0/24. Apakah host id nya ?", 3, "192.168.1", "192.168", ".0", "192"),
+            Round("Apa arti Subnetting ?", 4, "Membuka warung kopi", "Menjalankan program di internet", "Memegang kendali dari suatu program", "Mengalokasikan IP address ke dalam beberapa bagian yang memiliki network id unik"),
+            Round("Apa nama translator pada router yang bertugas mentranslasikan IP address lokal dari setiap device yang tekonek ke suatu WiFi agar dapat dikenali ISP ?", 4, "TAN", "ATN", "NAD", "NAT")
+        ]
 
 
 class ClientThread(threading.Thread) :
@@ -41,6 +46,7 @@ class ClientThread(threading.Thread) :
         self.client_score = 0
         self.exceed_time = False
         print("New connection added: ", self.caddress)
+
 
     #thread.start() akan menjalankan ini
     def run(self) :
@@ -113,8 +119,6 @@ class ClientThread(threading.Thread) :
             time.sleep(1)
         print ("<==========================================>")
         print("Client at ", self.caddress, " disconnected...")
-        self.csocket.close()
-        exit()
 
 
     def server_wait_time (self):
@@ -130,6 +134,7 @@ class ClientThread(threading.Thread) :
             print ("Your time is up! You didn't get any score :( ")
             print ("Please input anything to proceed the next question ...")
             self.exceed_time = True
+
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score):
 

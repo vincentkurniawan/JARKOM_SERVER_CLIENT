@@ -1,3 +1,7 @@
+# Kelompok :
+# Nadia Clarissa Hermawan / 6181901013
+# Vincent Kurniawan / 6181901024
+
 import socket, time, threading
 
 # score state collection
@@ -15,6 +19,7 @@ class Main():
     def __init__(self):
         self.setupClient()
 
+
     #setup the client connection with the server
     def setupClient(self):
         #define the server's address & port on which you want to connect
@@ -31,6 +36,7 @@ class Main():
         while True:
             self.question_answer_recv()
         
+
     def question_answer_recv (self):
         data0 = self.client.recv(1024)
         data0 = data0.decode('utf-8')
@@ -54,6 +60,7 @@ class Main():
             print ("<==========================================>")
             self.client.close()
             exit()
+
 
     def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):
         question_number = int(question_number) + 1
@@ -90,9 +97,11 @@ class Main():
         print ('Waiting for host response ...')
         self.handler_answer_send(answer)
 
+
     def handler_answer_send (self, answer):
         msg = str(answer)
         self.client.send(msg.encode('utf-8'))
+
 
     def client_wait_time (self):
         check = True
@@ -107,6 +116,7 @@ class Main():
             print ("Your time is up! You didn't get any score :( ")
             print ("Please input anything to proceed the next question ...")
             self.exceed_time = True
+
 
 if __name__ == '__main__':
     cui = Main()

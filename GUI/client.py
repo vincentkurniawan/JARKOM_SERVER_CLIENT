@@ -1,10 +1,6 @@
+# Kelompok :
 # Nadia Clarissa Hermawan / 6181901013
-
-# The steps to make this client-server gui calculator :
-# 1) make the base client-server multi-threading TCP program beforehand (check the CUI folder)
-# 2) check if number 1 is working properly
-# 3) continue on importing tkinter, and setup the GUI window (focus on setupGUI(), etc method)
-# 4) p.s A = 5, B = 10
+# Vincent Kurniawan / 6181901024
 
 from functools import partial
 import socket
@@ -101,6 +97,7 @@ class Main():
         self.client_wait = False
         threading.Thread(target=self.question_answer_recv).start()
 
+
     def question_answer_recv (self):
         data0 = self.client.recv(1024)
         data0 = data0.decode('utf-8')
@@ -187,6 +184,7 @@ class Main():
             self.handler_answer_send(-100)
         else:
             self.status['text'] = 'Waiting for other player ...'
+
 
     #start the GUI window 
     def run(self):
