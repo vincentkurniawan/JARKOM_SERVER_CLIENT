@@ -47,7 +47,8 @@ class ClientThread(threading.Thread) :
             msg = data.decode('utf-8')
 
             if msg == 'init':
-                question_score = [i+1, rounds[i].question, rounds[i].a, rounds[i].b, rounds[i].c, rounds[i].d, client_score, SCORE_STATE_NOTSET]
+                question_score = [i, rounds[i].question, rounds[i].a, rounds[i].b, rounds[i].c, rounds[i].d, client_score, SCORE_STATE_NOTSET]
+                #TODO : start GUI untuk mulai QnA client-server (host)
                 
             #stopper connections 
             elif msg == 'done':
@@ -59,7 +60,7 @@ class ClientThread(threading.Thread) :
                     score_state = SCORE_STATE_TRUE
                 else:
                     score_state = SCORE_STATE_FALSE
-                question_score = [i+2, rounds[i+1].question, rounds[i+1].a, rounds[i+1].b, rounds[i+1].c, rounds[i+1].d, client_score, score_state]
+                question_score = [i+1, rounds[i+1].question, rounds[i+1].a, rounds[i+1].b, rounds[i+1].c, rounds[i+1].d, client_score, score_state]
             
             str_question_score = "_".join(str(x) for x in question_score)
             self.csocket.send(str_question_score.encode('utf-8'))

@@ -66,9 +66,7 @@ class Main():
         #empty frame filling
         self.title, self.question, self.answer_a, self.answer_b, self.answer_c, self.answer_d, self.score_state, self.score = self.create_display_labels()
         # self.total_label, self.expression_input, self.get_text_button = self.create_display_labels()
-
         
-
 
     #create top part frame for displaying the typed math opr & button
     def create_display_frame(self):
@@ -100,19 +98,19 @@ class Main():
 
         # the answer A
         answer_a = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_A))
-        answer_a.grid(row=1, column=0, padx=215, pady=0)
+        answer_a.grid(row=0, column=0, padx=0, pady=0)
 
         # the answer B
         answer_b = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_B))
-        answer_b.grid(row=1, column=1, padx=215, pady=0)
+        answer_b.grid(row=1, column=0, padx=0, pady=0)
 
         # the answer C
         answer_c = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_C))
-        answer_c.grid(row=2, column=0, padx=215, pady=0)
+        answer_c.grid(row=2, column=0, padx=0, pady=0)
 
         # the answer D
         answer_d = tk.Button(self.button_frame, text="A????", font=SMALL_FONT_STYLE, command=partial(self.handler_answer_send, ANSWER_D))
-        answer_d.grid(row=2, column=1, padx=215, pady=0)
+        answer_d.grid(row=3, column=0, padx=0, pady=0)
 
         # score state
         score_state = tk.Label(self.result_frame, anchor=CENTER, text="Your answer is ???", font=LARGE_FONT_STYLE, bg=DARK_GRAY, fg=LIGHT_GRAY)
@@ -125,46 +123,21 @@ class Main():
         return title, question, answer_a, answer_b, answer_c, answer_d, score_state, score
 
 
-        # #title
-        # title = "Enter any mathematical expression :"
-        # title_label = tk.Label(self.display_frame, anchor=CENTER, text=title, font=LARGE_FONT_STYLE, bg=DARK_GRAY, fg=LIGHT_GRAY)
-        # title_label.pack(expand=False, fill=None)
-
-        # #desc
-        # title = "with A = 5, B = 10"
-        # title_label = tk.Label(self.display_frame, anchor=CENTER, text=title, font=SMALL_FONT_STYLE, bg=DARK_GRAY, fg=LIGHT_GRAY)
-        # title_label.pack(expand=False, fill=None)
-
-        # #mathematical expression input box
-        # expression_input =  tk.Text(self.display_frame, width=35, height=3, font=SMALL_FONT_STYLE)
-        # expression_input.pack(pady=0)
-
-        # #submit button
-        # get_text_button = tk.Button(self.button_frame, text="Calculate", font=SMALL_FONT_STYLE, command=self.getMathExpr)
-        # get_text_button.grid(row=0, column=2, padx=215, pady=0)
-
-        # #display the result
-        # self.total_expression = "0"
-        # total_label = tk.Label(self.result_frame, padx=24, pady=5, text=self.total_expression, anchor=tk.CENTER, font=SMALL_FONT_STYLE)
-        # total_label.pack(expand=True, fill="both", pady=10)
-
-        # return total_label, expression_input, get_text_button
-
     def question_answer_recv (self):
         data0 = self.client.recv(1024)
         data0 = data0.decode('utf-8')
         data = list(data0.split("_"))
-        print("tester : ",data[0])
         self.handler_question_score(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+
 
     def handler_answer_send (self, answer):
         msg = str(answer)
         print("client's answer", msg)
         self.client.send(msg.encode('utf-8'))
 
-    def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):
-        # below are the codes to update GUI text view
 
+    #Update GUI text view
+    def handler_question_score (self, question_number, question, answer_a, answer_b, answer_c, answer_d, current_score, state_score):
         # set question 
         self.title.config(text = self.title.cget("text") + question_number)
         self.question.config(text = question)
@@ -182,47 +155,6 @@ class Main():
         elif (state_score == SCORE_STATE_FALSE):
             self.score_state.config(text = "Your answer is WRONG!")
 
-    #get the math expr, check error, then do the calculation
-    def getMathExpr(self):
-        self.total_expression =  self.expression_input.get("1.0", 'end-1c')
-        if self.total_expression == "" : 
-            self.total_label.config(text="Please fill the expression :)")
-        else :
-            expr = self.total_expression
-            if expr.__contains__('A') or expr.__contains__('B'):
-                expr = expr.replace('A', '5')
-                expr = expr.replace('B', '10')
-            
-            str_result = ''+self.calculate(expr)
-            if str_result == "Invalid syntax, please try again.. :(" :
-                self.total_label.config(text=str_result)
-            else: 
-                self.total_expression = self.total_expression + ' = ' + str_result
-                self.total_label.config(text=self.total_expression)
-
-            self.clearInput()
-
-
-    def calculate(self, expr):
-        #TCP keeps connections
-        while True:
-            #input client's message and then send it to server
-            message = expr
-            self.client.send(message.encode('utf-8'))
-
-            #message received from server
-            data = self.client.recv(1024)
-
-            #print the received message
-            return str(data.decode('utf-8'))
-
-        #close the connections with the server
-        self.client.close()
-
-
-    #reset the input box
-    def clearInput(self):
-        self.expression_input.delete('1.0', 'end-1c')
     #start the GUI window 
     def run(self):
         self.window.mainloop()
