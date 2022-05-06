@@ -58,7 +58,6 @@ class Main():
                 print ('The game will shut down in ', i, ' ...')
                 time.sleep(1)
             print ("<==========================================>")
-            self.client.close()
             exit()
 
 
